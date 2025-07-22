@@ -16,15 +16,6 @@ void	ft_putchar(char c)
 	write(1, &c, 1);
 }
 
-void	conv_hex(int dec)
-{
-	if (dec / 16 != 0)
-		conv_hex(dec / 16);
-	if (dec < 16)
-		ft_putchar('0');
-	ft_putchar("0123456789abcdef"[dec % 16]);
-}
-
 void	conv_hex(unsigned char dec)
 {
 	ft_putchar("0123456789abcdef"[dec / 16]);
