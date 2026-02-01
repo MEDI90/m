@@ -87,11 +87,11 @@ void	turk(t_stack_node **stack_a, t_stack_node **stack_b)
 {
 	if (!stack_a || !*stack_a)
 		return ;
-	if (stack_len(stack_a) >= 5)
-	{
+	if (stack_len(stack_a) > 3 && !*stack_b)
 		pb(stack_a, stack_b);
+	if (stack_len(stack_a) > 3 && !*stack_b)
 		pb(stack_a, stack_b);
-	}
+
 	while (stack_len(stack_a) > 3)
 	{
 		init_nodes(stack_a, stack_b);
