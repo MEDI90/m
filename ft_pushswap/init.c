@@ -6,7 +6,7 @@
 /*   By: mboubaza <mboubaza@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/20 22:41:09 by mboubaza          #+#    #+#             */
-/*   Updated: 2026/01/30 15:41:38 by mboubaza         ###   ########.fr       */
+/*   Updated: 2026/02/01 20:57:21 by mboubaza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,25 +40,29 @@ void	init_stack(t_stack_node **a, int ac, char **av)
 {
 	char	**stack_arr;
 	int		i;
+	int		j;
 	int		error;
 	long	n;
 
-	error = 0;
-	i = 0;
-	if (ac == 2)
-		stack_arr = ft_split(av[1], ' ');
-	else
-		stack_arr = av + 1;
-	while (stack_arr[i])
+	i = 1;
+	while (av[i])
 	{
-		n = ft_atol(stack_arr[i], &error);
-		if (error)
-			handle_error(a, stack_arr, ac);
-		stack_add_back(a, (int)n);
+		stack_arr = ft_split(av[i], ' ');
+		if (!stack_arr)
+			handle_error(a, NULL, 0);
+		j = 0;
+		while (stack_arr[j])
+		{
+			error = 0;
+			n = ft_atol(stack_arr[j], &error);
+			if (error)
+				handle_error(a, stack_arr, ac);
+			stack_add_back(a, (int)n);
+			j ++;
+		}
+		free_split(stack_arr);
 		i++;
 	}
-	if (ac == 2)
-		free_split(stack_arr);
 }
 
 void	init_i(t_stack_node **stack)
