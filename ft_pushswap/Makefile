@@ -1,32 +1,30 @@
 NAME		= push_swap
-CC		= cc
+CC			= cc
 CFLAGS		= -Wall -Wextra -Werror
 
-# Directories
-MOVES_DIR	= ./moves
+LIBFT       = ./libft/libft.a
 
-
-# Source Files
 SRCS		= main.c \
 			  init.c \
 			  init_utils.c \
 			  init_target.c \
 			  turk.c \
 			  list_utils.c \
-			  ./libft/ft_split.c\
-			  safe_atoi.c \
-			  $(MOVES_DIR)/push.c \
-			  $(MOVES_DIR)/swap.c \
-			  $(MOVES_DIR)/rotate.c \
-			  $(MOVES_DIR)/rev_rotate.c
+			  atoil.c \
+			  ./moves/push.c \
+			  ./moves/swap.c \
+			  ./moves/rotate.c \
+			  ./moves/rev_rotate.c
 
 OBJS		= $(SRCS:.c=.o)
 
-# Rules
 all: $(NAME)
 
+$(LIBFT):
+	make -C ./libft/
+
 $(NAME): $(LIBFT) $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) -o $(NAME)
 
 
 %.o: %.c
@@ -34,9 +32,11 @@ $(NAME): $(LIBFT) $(OBJS)
 
 clean:
 	rm -f $(OBJS)
+	make -C ./libft clean
 
 fclean: clean
 	rm -f $(NAME)
+	make -C ./libft fclean
 
 re: fclean all
 

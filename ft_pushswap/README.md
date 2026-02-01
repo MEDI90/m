@@ -1,5 +1,3 @@
-# Push_swap
-
 *This project has been created as part of the 42 curriculum by mboubaza.*
 
 > *Because Swap_push doesn't feel as natural*
@@ -110,11 +108,10 @@ The program handles the following errors:
 
 - [Push_swap Tutorial - Medium](https://medium.com/@jamierobertdawson/push-swap-the-least-amount-of-moves-with-two-stacks-d1e76a71789a)
 - [Turk Algorithm Explanation](https://github.com/o-reo/push_swap_visualizer)
-- 42 Intranet - Push_swap Subject PDF
 
 ### AI Usage
 
-AI tools were used to simplify complex concepts, provide clearer explanations of algorithms, and assist with debugging during development. All core logic and implementation were written manually following the 42 school methodology.
+AI tools were used to simplify complex concepts, provide clearer explanations of algorithms, and assist with debugging during development.
 
 ## Project Structure
 
