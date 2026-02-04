@@ -43,12 +43,6 @@ This implementation uses the **Turk Algorithm**, a cost-based approach that:
 ### Compilation
 
 ```bash
-# Clone the repository
-git clone https://github.com/yourusername/push_swap.git
-
-# Navigate to the directory
-cd push_swap
-
 # Compile
 make
 
