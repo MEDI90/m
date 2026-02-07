@@ -27,16 +27,15 @@ static void	free_split(char **str)
 	free(str);
 }
 
-static void	handle_error(t_stack_node **a, char **arr, int ac)
+static void	handle_error(t_stack_node **a, char **arr/*, int ac*/)
 {
 	free_stack(a);
-	if (ac == 2)
-		free_split(arr);
+	free_split(arr);
 	write(2, "Error\n", 6);
 	exit(1);
 }
 
-void	init_stack(t_stack_node **a, int ac, char **av)
+void	init_stack(t_stack_node **a, char **av)
 {
 	char	**stack_arr;
 	int		i;
@@ -49,14 +48,14 @@ void	init_stack(t_stack_node **a, int ac, char **av)
 	{
 		stack_arr = ft_split(av[i], ' ');
 		if (!stack_arr)
-			handle_error(a, NULL, 0);
+			handle_error(a, NULL);
 		j = 0;
 		while (stack_arr[j])
 		{
 			error = 0;
 			n = ft_atol(stack_arr[j], &error);
 			if (error)
-				handle_error(a, stack_arr, ac);
+				handle_error(a, stack_arr);
 			stack_add_back(a, (int)n);
 			j ++;
 		}

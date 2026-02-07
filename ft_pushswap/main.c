@@ -52,7 +52,7 @@ int	main(int ac, char **av)
 	stack_b = NULL;
 	if (ac == 1 || (ac == 2 && !av[1][0]))
 		return (1);
-	init_stack(&stack_a, ac, av);
+	init_stack(&stack_a, av);
 	if (check_dup(stack_a))
 	{
 		free_stack(&stack_a);

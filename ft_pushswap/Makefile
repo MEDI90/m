@@ -11,10 +11,10 @@ SRCS		= main.c \
 			  turk.c \
 			  list_utils.c \
 			  atoil.c \
-			  ./moves/push.c \
-			  ./moves/swap.c \
-			  ./moves/rotate.c \
-			  ./moves/rev_rotate.c
+			  push.c \
+			  swap.c \
+			  rotate.c \
+			  rev_rotate.c
 
 OBJS		= $(SRCS:.c=.o)
 

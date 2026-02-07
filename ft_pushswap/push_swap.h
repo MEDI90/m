@@ -40,7 +40,7 @@ t_stack_node		*max_node(t_stack_node **stack);
 t_stack_node		*min_node(t_stack_node **stack);
 
 /* ----------------------------- Init ------------------------------------ */
-void				init_stack(t_stack_node **a, int ac, char **av);
+void				init_stack(t_stack_node **a, char **av);
 void				init_nodes(t_stack_node **a, t_stack_node **b);
 void				init_i(t_stack_node **stack);
 void				init_abmed(t_stack_node **head);
