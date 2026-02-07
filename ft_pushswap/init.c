@@ -27,7 +27,7 @@ static void	free_split(char **str)
 	free(str);
 }
 
-static void	handle_error(t_stack_node **a, char **arr/*, int ac*/)
+static void	handle_error(t_stack_node **a, char **arr)
 {
 	free_stack(a);
 	free_split(arr);
