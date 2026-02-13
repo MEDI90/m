@@ -111,23 +111,19 @@ AI tools were used to simplify complex concepts, provide clearer explanations of
 
 ```text
 push_swap/
-├── Makefile
-├── push_swap.h
-├── main.c
+├── atoil.c
 ├── init.c
-├── init_utils.c
 ├── init_target.c
-├── turk.c
+├── init_utils.c
+├── libft/
 ├── list_utils.c
-├── safe_atoi.c
-├── moves/
-│   ├── push.c
-│   ├── swap.c
-│   ├── rotate.c
-│   └── rev_rotate.c
-└── libft/
+├── main.c
+├── Makefile
+├── push.c
+├── push_swap.h
+├── README.md
+├── rev_rotate.c
+├── rotate.c
+├── swap.c
+└── turk.c
 ```
-
----
-
-Made with ❤️ at 42
