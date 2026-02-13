@@ -6,7 +6,7 @@
 /*   By: mboubaza <mboubaza@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/28 13:25:59 by mboubaza          #+#    #+#             */
-/*   Updated: 2025/11/02 18:34:25 by mboubaza         ###   ########.fr       */
+/*   Updated: 2026/02/13 18:07:05 by mboubaza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ char	**ft_split(char const *s, char c)
 	while (j < word_counter((char *)s, c) && s[i])
 	{
 		while (s[i] == c)
-			i++;
+			i ++;
 		index = char_count((char *)s, i, c);
 		str[j] = malloc(sizeof(char) * (index - i + 1));
 		if (!str[j])

@@ -6,7 +6,7 @@
 /*   By: mboubaza <mboubaza@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/30 16:16:00 by mboubaza          #+#    #+#             */
-/*   Updated: 2026/01/30 16:16:00 by mboubaza         ###   ########.fr       */
+/*   Updated: 2026/02/13 18:02:17 by mboubaza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ void				init_target(t_stack_node **a, t_stack_node **b);
 void				init_target_b(t_stack_node **a, t_stack_node **b);
 void				init_cost(t_stack_node **a, t_stack_node **b);
 t_stack_node		*lowest_c(t_stack_node **a);
+int					word_counter(char *str, char c);
 
 /* ----------------------------- Moves ------------------------------------ */
 void				sa(t_stack_node **a);

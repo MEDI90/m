@@ -6,7 +6,7 @@
 /*   By: mboubaza <mboubaza@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/30 15:06:46 by mboubaza          #+#    #+#             */
-/*   Updated: 2026/01/30 16:03:26 by mboubaza         ###   ########.fr       */
+/*   Updated: 2026/02/13 19:02:08 by mboubaza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,12 @@ static int	stack_sorted(t_stack_node *stack)
 	return (1);
 }
 
+static int	error()
+{
+	write(2, "Error\n", 6);
+	return (1);
+}
+
 int	main(int ac, char **av)
 {
 	t_stack_node	*stack_b;
@@ -50,8 +56,10 @@ int	main(int ac, char **av)
 
 	stack_a = NULL;
 	stack_b = NULL;
-	if (ac == 1 || (ac == 2 && !av[1][0]))
+	if (ac == 1)
 		return (1);
+	if (av[1][0] == '\0')
+		return (error());
 	init_stack(&stack_a, av);
 	if (check_dup(stack_a))
 	{
