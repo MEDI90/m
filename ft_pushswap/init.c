@@ -6,7 +6,7 @@
 /*   By: mboubaza <mboubaza@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/20 22:41:09 by mboubaza          #+#    #+#             */
-/*   Updated: 2026/02/13 18:50:04 by mboubaza         ###   ########.fr       */
+/*   Updated: 2026/02/17 15:35:57 by mboubaza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,8 @@ void	init_stack(t_stack_node **a, char **av)
 	while (av[i ++])
 	{
 		error = 0;
-		// if ((word_counter(av[i - 1], ' ') == 0) || (*av[i - 1] == 0))
-		// 	handle_error(a, NULL);
+		if ((word_counter(av[i - 1], ' ') == 0) || (*av[i - 1] == 0))
+			handle_error(a, NULL);
 		stack_arr = ft_split(av[i - 1], ' ');
 		if (!stack_arr || !stack_arr[0])
 			handle_error(a, NULL);
