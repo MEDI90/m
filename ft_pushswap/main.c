@@ -43,7 +43,7 @@ static int	stack_sorted(t_stack_node *stack)
 	return (1);
 }
 
-static int	error()
+static int	error(void)
 {
 	write(2, "Error\n", 6);
 	return (1);
