@@ -13,7 +13,8 @@
 #ifndef PUSH_SWAP_H
 # define PUSH_SWAP_H
 
-# include "libft/libft.h"
+# include <unistd.h>
+# include <stdlib.h>
 
 long				ft_atol(const char *nptr, int *error);
 
@@ -38,6 +39,7 @@ void				free_stack(t_stack_node **stack);
 void				turk(t_stack_node **stack_a, t_stack_node **stack_b);
 t_stack_node		*max_node(t_stack_node **stack);
 t_stack_node		*min_node(t_stack_node **stack);
+char				**ft_split(char const *s, char c);
 
 /* ----------------------------- Init ------------------------------------ */
 void				init_stack(t_stack_node **a, char **av);
