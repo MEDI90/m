@@ -31,11 +31,11 @@ long	ft_atol(const char *nptr, int *error)
 	while (nptr[i] >= '0' && nptr[i] <= '9')
 	{
 		result = result * 10 + (nptr[i] - '0');
+		if ((result * sign) > 2147483647 || (result * sign) < -2147483648)
+			*error = 1;
 		i++;
 	}
 	if (nptr[i] != '\0')
-		*error = 1;
-	if ((result * sign) > 2147483647 || (result * sign) < -2147483648)
 		*error = 1;
 	return (result * sign);
 }
