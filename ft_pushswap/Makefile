@@ -28,7 +28,7 @@ $(NAME): $(OBJS) #$(LIBFT)
 	$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
 
 
-%.o: %.c
+%.o: %.c push_swap.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
