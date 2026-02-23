@@ -2,8 +2,6 @@ NAME		= push_swap
 CC			= cc
 CFLAGS		= -Wall -Wextra -Werror
 
-# LIBFT       = ./libft/libft.a
-
 SRCS		= main.c \
 			  init.c \
 			  init_utils.c \
@@ -21,10 +19,7 @@ OBJS		= $(SRCS:.c=.o)
 
 all: $(NAME)
 
-# $(LIBFT):
-# 	make -C ./libft/
-
-$(NAME): $(OBJS) #$(LIBFT) 
+$(NAME): $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
 
 
