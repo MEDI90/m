@@ -1,18 +1,19 @@
 #!/usr/bin/python3
 class plant:
-	def __init__(self, name: str, height: int, age: int):
-		self.name = name
-		self.height = height
-		self.age = age
-	
-	def desplay_info(self) -> None:
-		print(f"{self.name}: {self.height}cm, {self.age} days old")
+    def __init__(self, name: str, height: int, age: int):
+        self.name = name
+        self.height = height
+        self.age = age
 
-	def grow(self, ammount: int = 1) -> None:
-		self.height = self.height + ammount
-	
-	def aging(self, ammount: int = 1) -> None:
-		self.age = self.age + ammount
+    def desplay_info(self) -> None:
+        print(f"{self.name}: {self.height}cm, {self.age} days old")
+
+    def grow(self, ammount: int = 1) -> None:
+        self.height = self.height + ammount
+
+    def aging(self, ammount: int = 1) -> None:
+        self.age = self.age + ammount
+
 
 if __name__ == "__main__":
     rose = plant("Rose", 25, 30)
