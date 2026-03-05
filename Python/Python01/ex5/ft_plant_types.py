@@ -10,17 +10,19 @@ class Flower(Plant):
         super().__init__(name, height, age)
         self.color = color
 
-    def Bloom(self) -> None:
+    def bloom(self) -> None:
         print(f"{self.name} is blooming beautifully!")
 
 
 class Tree(Plant):
-    def __init__(self, name: str, height: int, age: int, trunk_diameter: int):
+    def __init__(self, name: str, height: int, age: int,
+                 trunk_diameter: int, shade: int):
         super().__init__(name, height, age)
         self.trunk_diameter = trunk_diameter
+        self.shade = shade
 
     def produce_shade(self) -> None:
-        print(f"{self.name} provides {self.trunk_diameter} "
+        print(f"{self.name} provides {self.shade} "
               "square meters of shade")
 
 

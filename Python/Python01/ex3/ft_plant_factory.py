@@ -1,9 +1,12 @@
 #!/usr/bin/python3
 class Plant:
+    created_plants = 0
+
     def __init__(self, name: str, height: int, age: int):
         self.name = name
         self.height = height
         self.age = age
+        Plant.created_plants += 1
 
     def display_info(self) -> None:
         print(f"Created: {self.name} ({self.height}cm, {self.age} days)")
@@ -24,6 +27,6 @@ if __name__ == "__main__":
         Plant("Sunflower", 80, 45),
         Plant("Fern", 15, 120)
     )
-    for i in plants:
-        i.display_info()
-    print("\nTotal plants created: 5")
+    for p in plants:
+        p.display_info()
+    print(f"\nTotal plants created: {Plant.created_plants}")

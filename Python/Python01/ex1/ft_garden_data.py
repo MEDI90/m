@@ -1,19 +1,19 @@
 #!/usr/bin/python3
-class plant:
+class Plant:
     def __init__(self, name: str, height: int, age: int):
         self.name = name
         self.height = height
         self.age = age
 
-    def desplay_info(self) -> None:
+    def display_info(self) -> None:
         print(f"{self.name}: {self.height}cm, {self.age} days old")
 
 
 if __name__ == "__main__":
-    roze = plant("Roze", 25, 30)
-    sunflower = plant("Sunflower", 80, 45)
-    cactus = plant("Cactun", 15, 120)
-    print("=== Welcome to My Garden ===")
-    roze.desplay_info()
-    sunflower.desplay_info()
-    cactus.desplay_info()
+    roze = Plant("Rose", 25, 30)
+    sunflower = Plant("Sunflower", 80, 45)
+    cactus = Plant("Cactus", 15, 120)
+    print("=== Garden Plant Registry ===")
+    roze.display_info()
+    sunflower.display_info()
+    cactus.display_info()

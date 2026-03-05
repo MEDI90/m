@@ -1,11 +1,11 @@
 #!/usr/bin/python3
-class plant:
+class Plant:
     def __init__(self, name: str, height: int, age: int):
         self.name = name
         self.height = height
         self.age = age
 
-    def desplay_info(self) -> None:
+    def get_info(self) -> None:
         print(f"{self.name}: {self.height}cm, {self.age} days old")
 
     def grow(self, ammount: int = 1) -> None:
@@ -16,14 +16,17 @@ class plant:
 
 
 if __name__ == "__main__":
-    rose = plant("Rose", 25, 30)
+    rose = Plant("Rose", 25, 30)
+    tulip = Plant("Tulip", 15, 20)
     start_height = rose.height
     print("=== Day 1 ===")
-    rose.desplay_info()
+    rose.get_info()
     for _ in range(6):
         rose.grow(1)
         rose.aging(1)
+        tulip.grow(2)
+        tulip.aging(1)
     print("=== Day 7 ===")
-    rose.desplay_info()
+    rose.get_info()
     growth_this_week = rose.height - start_height
     print(f"Growth this week: +{growth_this_week}cm")
