@@ -109,9 +109,9 @@ if __name__ == "__main__":
     ]
 
     plants = [
-    Plant("Oak Tree", 100, 20),
-    FloweringPlant("Rose", 25, 5, "red"),
-    PrizeFlower("Sunflower", 50, 5, "yellow", 10)
+        Plant("Oak Tree", 100, 20),
+        FloweringPlant("Rose", 25, 5, "red"),
+        PrizeFlower("Sunflower", 50, 5, "yellow", 10)
     ]
     for plant in plants:
         GardenManager.add_plant(garden_managers[0], plant)
@@ -131,6 +131,8 @@ if __name__ == "__main__":
 
     alice_score = GardenManager.GardenStats.calculate_score(garden_managers[0])
     bob_score = GardenManager.GardenStats.calculate_score(garden_managers[1])
-    print(f"Garden scores - {garden_managers[0].name}: {alice_score}, {garden_managers[1].name}: {bob_score}")
+    print(f"Garden scores - {garden_managers[0].name}: "
+          f"{alice_score}, {garden_managers[1].name}: {bob_score}")
 
-    GardenManager.create_garden_network([garden_managers[0], garden_managers[1]])
+    GardenManager.create_garden_network([garden_managers[0],
+                                         garden_managers[1]])

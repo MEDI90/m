@@ -28,40 +28,39 @@ class Tree(Plant):
 
 class Vegetable(Plant):
     def __init__(self, name: str, height: int,
-                 age: int, harvest_season: str,  nutritional_value: str) -> None:
+                 age: int, harvest_season: str,
+                 nutritional_value: str) -> None:
         super().__init__(name, height, age)
         self.harvest_season = harvest_season
         self. nutritional_value = nutritional_value
 
 
 if __name__ == "__main__":
-    flowers = (
+    flowers = [
       Flower("Rose", 25, 30, "red"),
       Flower("Sunflower", 150, 45, "yellow")
-    )
-    trees = (
+    ]
+    trees = [
       Tree("Oak", 500, 1825, 50, 78),
       Tree("Pine", 800, 3650, 40, 50)
-    )
-    vegitables = (        
-    Vegetable("Tomato", 80, 90, "summer", "vitamin C"),
-    Vegetable("Carrot", 20, 60, "autumn", "vitamin A")
-    )
+    ]
+    vegitables = [
+      Vegetable("Tomato", 80, 90, "summer", "vitamin C"),
+      Vegetable("Carrot", 20, 60, "autumn", "vitamin A")
+    ]
     print("=== Garden Plant Types ===")
     for flower in flowers:
-      print()
-      print(f"{flower.name} (Flower): {flower.height}cm, "
-            f"{flower.age} days, {flower.color} color")
-      flower.bloom()
+        print()
+        print(f"{flower.name} (Flower): {flower.height}cm, "
+              f"{flower.age} days, {flower.color} color")
+        flower.bloom()
     for tree in trees:
-      print()
-      print(f"{tree.name} (Tree): {tree.height}cm, "
-            f"{tree.age} days, {tree.trunk_diameter}cm diameter")
-      tree.produce_shade()
+        print()
+        print(f"{tree.name} (Tree): {tree.height}cm, "
+              f"{tree.age} days, {tree.trunk_diameter}cm diameter")
+        tree.produce_shade()
     for vegitable in vegitables:
-      print()
-      print(f"{vegitable.name} (Vegetable): {vegitable.height}cm, "
-            f"{vegitable.age} days, {vegitable.harvest_season} harvest")
-      print(f"{vegitable.name} is rich in {vegitable.nutritional_value}")
-
-    
+        print()
+        print(f"{vegitable.name} (Vegetable): {vegitable.height}cm, "
+              f"{vegitable.age} days, {vegitable.harvest_season} harvest")
+        print(f"{vegitable.name} is rich in {vegitable.nutritional_value}")
