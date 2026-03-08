@@ -10,7 +10,7 @@ class WaterError(GardenError):
     pass
 
 
-def catching_err() -> None:
+def test_custom_errors() -> None:
     print("=== Custom Garden Errors Demo ===")
     print("\nTesting PlantError...")
     try:
@@ -37,4 +37,4 @@ def catching_err() -> None:
 
 
 if __name__ == "__main__":
-    catching_err()
+    test_custom_errors()

@@ -1,4 +1,4 @@
-def check_temperature(temp_str: str) -> int:
+def check_temperature(temp_str: str) -> int | None:
     try:
         try:
             value = int(temp_str)
