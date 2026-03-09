@@ -35,18 +35,18 @@ class Vegetable(Plant):
 
 
 if __name__ == "__main__":
-    flowers = (
+    flowers = [
       Flower("Rose", 25, 30, "red"),
       Flower("Sunflower", 150, 45, "yellow")
-    )
-    trees = (
+    ]
+    trees = [
       Tree("Oak", 500, 1825, 50, 78),
       Tree("Pine", 800, 3650, 40, 50)
-    )
-    vegitables = (        
+    ]
+    vegitables = [        
     Vegetable("Tomato", 80, 90, "summer", "vitamin C"),
     Vegetable("Carrot", 20, 60, "autumn", "vitamin A")
-    )
+    ]
     print("=== Garden Plant Types ===")
     for flower in flowers:
       print()
