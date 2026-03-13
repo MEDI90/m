@@ -10,14 +10,13 @@ def main() -> None:
 
     print("-" * 50)
 
-    sys.stdout.write(f"[STANDARD] Archive status from"
-                     f" {archivist_id}: {status_report}\n")
+    print(f"[STANDARD] Archive status from {archivist_id}: {status_report}")
 
-    sys.stderr.write("[ALERT] System diagnostic:"
-                     " Communication channels verified\n")
+    print("[ALERT] System diagnostic: Communication"
+          " channels verified", file=sys.stderr)
 
-    print("[STANDARD] Data transmission complete\n", file=sys.stderr)
-    
+    print("[STANDARD] Data transmission complete")
+
     print("-" * 50)
     print("Three-channel communication test successful.")
 
