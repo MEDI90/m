@@ -10,37 +10,39 @@ class ProcessingStage(Protocol):
 
 
 class InputStage:
-    def process(self, data: Any) -> Any:
+    def process(self, data: Any) -> Dict[str, Any]:
         if isinstance(data, dict) and "sensor" in data:
             return data
         elif isinstance(data, str) and "user" in data:
-            return [x.strip() for x in data.split(',')]
+            return {"raw_list": [x.strip() for x in data.split(',')],
+                    "type": "csv_raw"}
         elif isinstance(data, list):
-            return data
+            return {"raw_list": data, "type": "stream_raw"}
         raise ValueError("Invalid input format")
 
 
 class TransformStage:
-    def process(self, data: Any) -> Any:
-        if isinstance(data, dict):
+    def process(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        if "sensor" in data:
             try:
                 val = float(data["value"])
                 return {"type": "json", "val": val, "unit": data["unit"]}
             except Exception:
                 raise ValueError("Invalid numeric value in JSON input")
 
-        elif isinstance(data, list) and "user" in data:
+        elif data.get("type") == "csv_raw":
             return {"type": "csv", "actions": 1}
 
-        elif isinstance(data, list):
-            avg = sum(data) / len(data) if data else 0.0
-            return {"type": "stream", "len": len(data), "avg": avg}
+        elif data.get("type") == "stream_raw":
+            stream_data = data["raw_list"]
+            avg = sum(stream_data) / len(stream_data) if stream_data else 0.0
+            return {"type": "stream", "len": len(stream_data), "avg": avg}
 
         raise ValueError("Transform failed")
 
 
 class OutputStage:
-    def process(self, data: Any) -> Any:
+    def process(self, data: Dict[str, Any]) -> str:
         if data["type"] == "json":
             return (f"Processed temperature reading: "
                     f"{data['val']}°{data['unit']} (Normal range)")
@@ -75,7 +77,6 @@ class ProcessingPipeline(ABC):
                 run_history[stage_name] = current_data
 
             self.history.append(run_history)
-            
             self.metrics["processed"] += 1
             self.metrics["total_time"] += (time.time() - start_time)
             return current_data
@@ -92,33 +93,40 @@ class ProcessingPipeline(ABC):
 
 
 class JSONAdapter(ProcessingPipeline):
+    def __init__(self, pipeline_id: str) -> None:
+        super().__init__(pipeline_id)
+
     def process(self, data: Any) -> Union[str, Any]:
         return self.execute(data)
 
 
 class CSVAdapter(ProcessingPipeline):
+    def __init__(self, pipeline_id: str) -> None:
+        super().__init__(pipeline_id)
+
     def process(self, data: Any) -> Union[str, Any]:
         return self.execute(data)
 
 
 class StreamAdapter(ProcessingPipeline):
+    def __init__(self, pipeline_id: str) -> None:
+        super().__init__(pipeline_id)
+
     def process(self, data: Any) -> Union[str, Any]:
         return self.execute(data)
 
 
 class NexusManager:
     def __init__(self) -> None:
-        self.pipelines: Dict[str, ProcessingPipeline] = {}
+        self.pipelines: List[ProcessingPipeline] = []
 
-    def register_pipeline(self, pipeline: ProcessingPipeline) -> None:
-        self.pipelines[pipeline.pipeline_id] = pipeline
+    def add_pipeline(self, pipeline: ProcessingPipeline) -> None:
+        self.pipelines.append(pipeline)
 
-    def get_statistics(self) -> Dict[str, float]:
-        total_time = sum(p.metrics["total_time"]
-                         for p in self.pipelines.values())
-        processed = sum(p.metrics["processed"]
-                        for p in self.pipelines.values())
-        errors = sum(p.metrics["errors"] for p in self.pipelines.values())
+    def process_data(self) -> Dict[str, float]:
+        total_time = sum(p.metrics["total_time"] for p in self.pipelines)
+        processed = sum(p.metrics["processed"] for p in self.pipelines)
+        errors = sum(p.metrics["errors"] for p in self.pipelines)
         return {"total_time": total_time, "num_valid": processed,
                 "errors": errors}
 
@@ -163,9 +171,9 @@ def main() -> None:
     print("Data flow: Raw -> Processed -> Analyzed -> Stored\n")
 
     manager = NexusManager()
-    manager.register_pipeline(json_pipe)
-    manager.register_pipeline(csv_pipe)
-    manager.register_pipeline(stream_pipe)
+    manager.add_pipeline(json_pipe)
+    manager.add_pipeline(csv_pipe)
+    manager.add_pipeline(stream_pipe)
 
     for _ in range(32):
         json_pipe.process(j_input)
@@ -174,7 +182,7 @@ def main() -> None:
     for _ in range(33):
         stream_pipe.process([20, 21, 22])
 
-    stats = manager.get_statistics()
+    stats = manager.process_data()
     total = int(stats['num_valid'] + stats['errors'])
     eff = (stats['num_valid'] / total) * 100 if total > 0 else 0
 
