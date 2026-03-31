@@ -11,7 +11,6 @@ def main() -> None:
     
     my_deck = Deck()
     
-    # Create one of each card type
     lightning = SpellCard(name="Lightning Bolt", cost=3, rarity="Common", effect_type="damage")
     crystal = ArtifactCard(name="Mana Crystal", cost=2, rarity="Rare", durability=5, effect="+1 mana per turn")
     dragon = CreatureCard(name="Fire Dragon", cost=5, rarity="Legendary", attack=7, health=5)
@@ -30,7 +29,6 @@ def main() -> None:
     
     while my_deck.cards:
         drawn_card = my_deck.draw_card()
-        # Fallback to .type if .card_type isn't found (for backward compatibility with your ex0)
         card_type = getattr(drawn_card, "card_type", getattr(drawn_card, "type", "Unknown"))
         
         print(f"Drew: {drawn_card.name} ({card_type})")
