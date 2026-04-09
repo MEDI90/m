@@ -2,7 +2,6 @@ from ex0.creature import Creature
 from .capabilities import HealCapability, TransformCapability
 
 
-# --- Healing Family ---
 class Sproutling(Creature, HealCapability):
     def __init__(self) -> None:
         super().__init__("Sproutling", "Grass")
@@ -25,10 +24,8 @@ class Bloomelle(Creature, HealCapability):
         return f"{self.name} heals itself and others for a large amount"
 
 
-# --- Transforming Family ---
 class Shiftling(Creature, TransformCapability):
     def __init__(self) -> None:
-        # Call both constructors explicitly due to multiple inheritance
         Creature.__init__(self, "Shiftling", "Normal")
         TransformCapability.__init__(self)
 

@@ -13,13 +13,11 @@ from ex2 import (
 def battle(opponents: list[tuple[CreatureFactory, BattleStrategy]]) -> None:
     print(f"*** Tournament ***\n{len(opponents)} opponents involved")
 
-    # Round-robin: each opponent fights every other opponent exactly once
     for i in range(len(opponents)):
         for j in range(i + 1, len(opponents)):
             fac1, strat1 = opponents[i]
             fac2, strat2 = opponents[j]
 
-            # Spawn the fighters
             fighter1 = fac1.create_base()
             fighter2 = fac2.create_base()
 
@@ -30,19 +28,17 @@ def battle(opponents: list[tuple[CreatureFactory, BattleStrategy]]) -> None:
             print("now fight!")
 
             try:
-                # Fighter 1 acts
                 actions1 = strat1.act(fighter1)
                 for action in actions1:
                     print(action)
 
-                # Fighter 2 acts
                 actions2 = strat2.act(fighter2)
                 for action in actions2:
                     print(action)
 
             except StrategyError as e:
                 print(f"Battle error, aborting tournament: {e}")
-                return  # Abort the entire tournament on error
+                return
 
 
 def main() -> None:
