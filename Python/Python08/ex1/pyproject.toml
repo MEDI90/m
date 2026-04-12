@@ -2,8 +2,8 @@
 name = "matrix-loader"
 version = "0.1.0"
 description = "Matrix loading program for Data Engineering"
-authors = ["Student <student@example.com>"]
-readme = "README.md"
+authors = ["mboubaza"]
+package-mode = false
 
 [tool.poetry.dependencies]
 python = "^3.10"

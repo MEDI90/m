@@ -4,10 +4,18 @@ import site
 
 
 def is_in_virtual_env() -> bool:
+    # When a virtual environment is active,
+    # sys.prefix points to the venv's directory,
+    # while sys.base_prefix continues to
+    # point to the global Python installation.
+    # If they are different, it confirms we
+    # are running safely inside the isolated construct.
     return sys.prefix != sys.base_prefix
 
 
 def print_global_warning() -> None:
+    # Outputs a warning when the script is executed
+    # using the system's global Python interpreter.
     print()
     print("MATRIX STATUS: You're still plugged in")
     print()
@@ -26,6 +34,7 @@ def print_global_warning() -> None:
 
 
 def print_venv_success() -> None:
+    # Extracts and formats the specific environment name and path for display.
     env_name: str = os.path.basename(sys.prefix)
     env_path: str = sys.prefix
 
@@ -42,10 +51,13 @@ def print_venv_success() -> None:
     print()
     print("Package installation path:")
 
+    # Fetches the specific directory where third-party
+    # packages will be stored in this environment.
     site_packages: list[str] = site.getsitepackages()
     if site_packages:
         print(site_packages[0])
     else:
+        # Fallback mechanism in case getsitepackages() returns an empty list
         for path in sys.path:
             if "site-packages" in path:
                 print(path)
@@ -53,6 +65,8 @@ def print_venv_success() -> None:
 
 
 def main() -> None:
+    # Main execution flow: routes to the appropriate
+    # output based on the environment check.
     if is_in_virtual_env():
         print_venv_success()
     else:
