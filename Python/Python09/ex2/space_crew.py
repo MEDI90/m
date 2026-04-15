@@ -5,7 +5,6 @@ from pydantic import BaseModel, Field, ValidationError, model_validator
 
 
 class Rank(str, Enum):
-    """Enumeration for valid crew member ranks."""
     CADET = "cadet"
     OFFICER = "officer"
     LIEUTENANT = "lieutenant"
@@ -14,7 +13,6 @@ class Rank(str, Enum):
 
 
 class CrewMember(BaseModel):
-    """Model representing an individual crew member."""
     member_id: str = Field(..., min_length=3, max_length=10)
     name: str = Field(..., min_length=2, max_length=50)
     rank: Rank = Field(...)
@@ -25,7 +23,6 @@ class CrewMember(BaseModel):
 
 
 class SpaceMission(BaseModel):
-    """Model representing a space mission and its crew."""
     mission_id: str = Field(..., min_length=5, max_length=15)
     mission_name: str = Field(..., min_length=3, max_length=100)
     destination: str = Field(..., min_length=3, max_length=50)
@@ -37,22 +34,17 @@ class SpaceMission(BaseModel):
 
     @model_validator(mode='after')
     def validate_mission_rules(self) -> 'SpaceMission':
-        """Validates mission constraints across multiple fields and crew."""
 
-        # Rule 1: Mission ID must start with 'M'
         if not self.mission_id.startswith('M'):
             raise ValueError("Mission ID must start with 'M'")
 
-        # Rule 2: Must have at least one Commander or Captain
         has_leader = any(
             m.rank in [Rank.COMMANDER, Rank.CAPTAIN] for m in self.crew
         )
         if not has_leader:
             raise ValueError(
-                "Mission must have at least one Commander or Captain"
             )
 
-        # Rule 3: Long missions need 50% experienced crew
         if self.duration_days > 365:
             experienced_count = sum(1 for m in self.crew
                                     if m.years_experience >= 5)
@@ -62,7 +54,6 @@ class SpaceMission(BaseModel):
                     "(5+ years)"
                 )
 
-        # Rule 4: All crew members must be active
         if not all(m.is_active for m in self.crew):
             raise ValueError("All crew members must be active")
 
@@ -70,9 +61,8 @@ class SpaceMission(BaseModel):
 
 
 def main() -> None:
-    print("Space Mission Crew Validation\n")
+    print("Space Mission Crew Validation\n========================================")
 
-    # Creating valid crew members
     cmd = CrewMember(
         member_id="C001", name="Sarah Connor", rank=Rank.COMMANDER,
         age=45, specialization="Mission Command", years_experience=20
@@ -109,11 +99,11 @@ def main() -> None:
 
     except ValidationError as e:
         print("Unexpected validation error:")
-        print(e)
+        for err in e.errors():
+            print(err['msg'])
 
-    print("\n" + "-" * 40 + "\n")
+    print("\n" + "========================================")
 
-    # Creating an invalid mission (No commander/captain)
     try:
         SpaceMission(
             mission_id="M2024_MOON",
@@ -121,15 +111,13 @@ def main() -> None:
             destination="Moon",
             launch_date=datetime.now(),
             duration_days=30,
-            crew=[nav, eng],  # Fails: lacks a commander or captain
+            crew=[nav, eng],
             budget_millions=500.0
         )
-    except ValidationError:
+    except ValidationError as e:
         print("Expected validation error:")
-        print("Mission must have at least one Commander or Captain")
-        # In a real scenario you would print(e) to see the full Pydantic log,
-        # but the exercise output requests specifically printing the error
-        # cause.
+        for err in e.errors():
+            print(err['msg'])
 
 
 if __name__ == "__main__":

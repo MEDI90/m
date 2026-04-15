@@ -15,9 +15,8 @@ class SpaceStation(BaseModel):
 
 
 def main() -> None:
-    print("Space Station Data Validation\n")
+    print("Space Station Data Validation\n========================================")
 
-    # Attempting to create a valid space station instance
     try:
         valid_station = SpaceStation(
             station_id="ISS001",
@@ -44,21 +43,21 @@ def main() -> None:
         print("Error creating valid station:")
         print(e)
 
-    print("\n" + "-"*40 + "\n")
+    print("\n" + "========================================")
 
-    # Attempting to create an invalid station to trigger validation errors
     try:
         SpaceStation(
-            station_id="ID",               # Fails: min_length is 3
+            station_id="ID",
             name="Alpha Station",
-            crew_size=25,                  # Fails: <= 20
-            power_level=150.0,             # Fails: le 100.0
+            crew_size=25,
+            power_level=150.0,
             oxygen_level=98.0,
-            last_maintenance="2026-04-13"  # Pydantic will auto-convert this
+            last_maintenance="2026-04-13"
         )
     except ValidationError as e:
         print("Expected validation error:")
-        print(e)
+        for err in e.errors():
+            print(err['msg'].replace('Value error, ', ''))
 
 
 if __name__ == "__main__":

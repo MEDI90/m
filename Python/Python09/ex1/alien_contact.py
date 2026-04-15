@@ -24,23 +24,18 @@ class AlienContact(BaseModel):
 
     @model_validator(mode='after')
     def validate_business_rules(self) -> 'AlienContact':
-        """Custom validation for complex cross-field rules."""
 
-        # Rule 1: Contact ID must start with "AC"
         if not self.contact_id.startswith("AC"):
             raise ValueError('Contact ID must start with "AC"')
 
-        # Rule 2: Physical contact reports must be verified
         if self.contact_type == ContactType.PHYSICAL and not self.is_verified:
             raise ValueError('Physical contact reports must be verified')
 
-        # Rule 3: Telepathic contact requires at least 3 witnesses
         if self.contact_type == ContactType.TELEPATHIC:
             if self.witness_count < 3:
                 raise ValueError('Telepathic contact '
                                  'requires at least 3 witnesses')
 
-        # Rule 4: Strong signals (>7.0) should include received messages
         if self.signal_strength > 7.0 and not self.message_received:
             raise ValueError('Strong signals (>7.0) need received messages')
 
@@ -48,9 +43,8 @@ class AlienContact(BaseModel):
 
 
 def main() -> None:
-    print("Alien Contact Log Validation\n")
+    print("Alien Contact Log Validation\n======================================")
 
-    # Creating a valid contact report
     try:
         valid_contact = AlienContact(
             contact_id="AC_2024_001",
@@ -74,11 +68,11 @@ def main() -> None:
 
     except ValidationError as e:
         print("Unexpected validation error:")
-        print(e)
+        for error in e.errors():
+            print(error['msg'])
 
-    print("\n" + "-" * 40 + "\n")
+    print("\n" + "========================================")
 
-    # Creating an invalid report (Telepathic with only 1 witness)
     try:
         AlienContact(
             contact_id="AC_2024_002",
@@ -87,12 +81,13 @@ def main() -> None:
             contact_type=ContactType.TELEPATHIC,
             signal_strength=4.0,
             duration_minutes=10,
-            witness_count=1,  # Fails custom validator rule
+            witness_count=1,
             is_verified=False
         )
     except ValidationError as e:
         print("Expected validation error:")
-        print(e)
+        for err in e.errors():
+            print(err['msg'].replace('Value error, ', ''))
 
 
 if __name__ == "__main__":
