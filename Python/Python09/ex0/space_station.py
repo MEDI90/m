@@ -15,7 +15,8 @@ class SpaceStation(BaseModel):
 
 
 def main() -> None:
-    print("Space Station Data Validation\n========================================")
+    print("Space Station Data Validation\n"
+          "========================================")
 
     try:
         valid_station = SpaceStation(
@@ -47,10 +48,10 @@ def main() -> None:
 
     try:
         SpaceStation(
-            station_id="ID",
+            station_id="ID_002",
             name="Alpha Station",
             crew_size=25,
-            power_level=150.0,
+            power_level=90.0,
             oxygen_level=98.0,
             last_maintenance="2026-04-13"
         )

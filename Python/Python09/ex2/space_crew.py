@@ -62,7 +62,8 @@ class SpaceMission(BaseModel):
 
 
 def main() -> None:
-    print("Space Mission Crew Validation\n========================================")
+    print("Space Mission Crew Validation\n"
+          "========================================")
 
     cmd = CrewMember(
         member_id="C001", name="Sarah Connor", rank=Rank.COMMANDER,
