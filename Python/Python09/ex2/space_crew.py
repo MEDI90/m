@@ -43,6 +43,7 @@ class SpaceMission(BaseModel):
         )
         if not has_leader:
             raise ValueError(
+                "Mission must have at least one Commander or Captain"
             )
 
         if self.duration_days > 365:
@@ -95,7 +96,7 @@ def main() -> None:
         print(f"Crew size: {len(valid_mission.crew)}")
         print("Crew members:")
         for m in valid_mission.crew:
-            print(f"- {m.name} ({m.rank.value}) - {m.specialization}")
+            print(f"{m.name} ({m.rank.value}) - {m.specialization}")
 
     except ValidationError as e:
         print("Unexpected validation error:")
@@ -117,7 +118,7 @@ def main() -> None:
     except ValidationError as e:
         print("Expected validation error:")
         for err in e.errors():
-            print(err['msg'])
+            print(err['msg'].replace("Value error, ", ""))
 
 
 if __name__ == "__main__":

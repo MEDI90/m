@@ -37,7 +37,7 @@ class AlienContact(BaseModel):
                                  'requires at least 3 witnesses')
 
         if self.signal_strength > 7.0 and not self.message_received:
-            raise ValueError('Strong signals (>7.0) need received messages')
+            raise ValueError('Strong signals (>7.0) should include received messages')
 
         return self
 
