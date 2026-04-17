@@ -38,7 +38,7 @@ class AlienContact(BaseModel):
 
         if self.signal_strength > 7.0 and not self.message_received:
             raise ValueError('Strong signals (>7.0) should '
-                             'nclude received messages')
+                             'include received messages')
 
         return self
 
