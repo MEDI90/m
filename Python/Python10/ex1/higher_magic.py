@@ -2,29 +2,21 @@ from collections.abc import Callable
 
 
 def spell_combiner(spell1: Callable, spell2: Callable) -> Callable:
-    def combined(target: str, power: int) -> tuple:
-        return (spell1(target, power), spell2(target, power))
-    return combined
+    return lambda target, power: (spell1(target, power), spell2(target, power))
 
 
 def power_amplifier(base_spell: Callable, multiplier: int) -> Callable:
-    def amplified(target: str, power: int) -> str:
-        return base_spell(target, power * multiplier)
-    return amplified
+    return lambda target, power: base_spell(target, power * multiplier)
 
 
 def conditional_caster(condition: Callable, spell: Callable) -> Callable:
-    def conditional(target: str, power: int) -> str:
-        if condition(target, power):
-            return spell(target, power)
-        return "Spell fizzled"
-    return conditional
+    return lambda target, power: (
+        spell(target, power) if condition(target, power) else "Spell fizzled"
+    )
 
 
 def spell_sequence(spells: list[Callable]) -> Callable:
-    def sequence(target: str, power: int) -> list:
-        return [spell(target, power) for spell in spells]
-    return sequence
+    return lambda target, power: [spell(target, power) for spell in spells]
 
 
 if __name__ == "__main__":

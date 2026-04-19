@@ -19,15 +19,12 @@ def power_validator(min_power: int) -> Callable:
     def decorator(func: Callable) -> Callable:
         @functools.wraps(func)
         def wrapper(*args: object, **kwargs: object) -> object:
-            # Support both standalone (power first) and
-            # instance methods (self first, power second)
-            power = args[0]
-            if isinstance(power, int) is False or (
-                not isinstance(power, int)
-            ):
-                if len(args) > 1 and isinstance(args[1], int):
-                    power = args[1]
-            if not isinstance(power, int) or power < min_power:
+            power = None
+            for arg in args:
+                if isinstance(arg, int):
+                    power = arg
+                    break
+            if power is None or power < min_power:
                 return "Insufficient power for this spell"
             return func(*args, **kwargs)
         return wrapper
@@ -42,10 +39,11 @@ def retry_spell(max_attempts: int) -> Callable:
                 try:
                     return func(*args, **kwargs)
                 except Exception:
-                    print(
-                        f"Spell failed, retrying... "
-                        f"(attempt {attempt}/{max_attempts})"
-                    )
+                    if attempt < max_attempts:
+                        print(
+                            f"Spell failed, retrying... "
+                            f"(attempt {attempt}/{max_attempts})"
+                        )
             return f"Spell casting failed after {max_attempts} attempts"
         return wrapper
     return decorator
@@ -59,7 +57,7 @@ class MageGuild:
         )
 
     @power_validator(min_power=10)
-    def cast_spell(self, power: int, spell_name: str) -> str:
+    def cast_spell(self, spell_name: str, power: int) -> str:
         return f"Successfully cast {spell_name} with {power} power"
 
 
@@ -87,5 +85,5 @@ if __name__ == "__main__":
     guild = MageGuild()
     print(MageGuild.validate_mage_name("Merlin"))
     print(MageGuild.validate_mage_name("X2"))
-    print(guild.cast_spell(15, "Lightning"))
-    print(guild.cast_spell(5, "Lightning"))
+    print(guild.cast_spell("Lightning", 15))
+    print(guild.cast_spell("Lightning", 5))

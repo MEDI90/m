@@ -24,10 +24,7 @@ def spell_accumulator(initial_power: int) -> Callable:
 
 
 def enchantment_factory(enchantment_type: str) -> Callable:
-    def enchant(item_name: str) -> str:
-        return f"{enchantment_type} {item_name}"
-
-    return enchant
+    return lambda item_name: f"{enchantment_type} {item_name}"
 
 
 def memory_vault() -> dict[str, Callable]:
