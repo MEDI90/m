@@ -1,8 +1,12 @@
+from typing import Any
+
+
 def artifact_sorter(artifacts: list[dict]) -> list[dict]:
     try:
         return sorted(
             artifacts,
-            key=lambda artifact: artifact.get('power', 0) if isinstance(artifact, dict) else 0,
+            key=lambda artifact: artifact.get(
+                'power', 0) if isinstance(artifact, dict) else 0,
             reverse=True
         )
     except TypeError:
@@ -13,7 +17,8 @@ def power_filter(mages: list[dict], min_power: int) -> list[dict]:
     try:
         return list(
             filter(
-                lambda mage: isinstance(mage, dict) and mage.get('power', 0) >= min_power,
+                lambda mage: isinstance(mage, dict) and mage.get(
+                    'power', 0) >= min_power,
                 mages
             )
         )
@@ -34,15 +39,17 @@ def mage_stats(mages: list[dict]) -> dict:
         if not mages:
             return default_stats
 
-        valid_mages = list(filter(lambda m: isinstance(m, dict) and 'power' in m, mages))
-        
+        valid_mages = list(
+            filter(lambda m: isinstance(m, dict) and 'power' in m, mages))
+
         if not valid_mages:
             return default_stats
 
         max_power = max(valid_mages, key=lambda mage: mage['power'])['power']
         min_power = min(valid_mages, key=lambda mage: mage['power'])['power']
         avg_power = round(
-            sum(map(lambda mage: mage['power'], valid_mages)) / len(valid_mages), 2
+            sum(map(lambda mage: mage['power'],
+                    valid_mages)) / len(valid_mages), 2
         )
 
         return {
@@ -55,8 +62,10 @@ def mage_stats(mages: list[dict]) -> dict:
 
 
 if __name__ == "__main__":
-    sample_artifacts = [{'name': 'Crystal Orb', 'power': 85}, {'name': 'Fire Staff', 'power': 92}]
-    sample_mages = [{'name': 'Alex', 'power': 120}, {'name': 'Jordan', 'power': 90}]
+    sample_artifacts = [{'name': 'Crystal Orb', 'power': 85}, {
+        'name': 'Fire Staff', 'power': 92}]
+    sample_mages = [{'name': 'Alex', 'power': 120},
+                    {'name': 'Jordan', 'power': 90}]
     sample_spells = ['fireball', 'heal shield']
 
     print("--- Standard Data Tests ---")
@@ -70,7 +79,18 @@ if __name__ == "__main__":
     print(mage_stats(sample_mages))
 
     print("\n--- Corrupted Data Tests ---")
-    print(f"Artifact Sorter (None): {artifact_sorter(None)}")
-    print(f"Power Filter (Malformed dicts): {power_filter([{'name': 'Novice'}], 50)}")
-    print(f"Spell Transformer (Int list): {spell_transformer([1, 2, 3])}")
-    print(f"Mage Stats (Mixed garbage): {mage_stats([{'power': 100}, 'not a mage', {'name': 'Bob'}])}")
+
+    bad_artifacts: Any = None
+    print(f"Artifact Sorter (None): {artifact_sorter(bad_artifacts)}")
+
+    print(
+        f"Power Filter (Malformed dicts): "
+        f"{power_filter([{'name': 'Novice'}], 50)}")
+    
+    bad_spells: Any = [1, 2, 3]
+    print(f"Spell Transformer (Int list): {spell_transformer(bad_spells)}")
+    
+    bad_mages: Any = [{'power': 100}, 'not a mage', {'name': 'Bob'}]
+    print(
+        f"Mage Stats (Mixed garbage): "
+        f"{mage_stats(bad_mages)}")

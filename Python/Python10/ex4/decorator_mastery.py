@@ -1,71 +1,95 @@
 import time
-from functools import wraps
 from collections.abc import Callable
+from functools import wraps
 from typing import Any
 
 
-def spell_timer(func: Callable) -> Callable:
+def spell_timer(func: Callable[..., Any]) -> Callable[..., Any]:
     @wraps(func)
     def wrapper(*args: Any, **kwargs: Any) -> Any:
-        print(f"Casting {func.__name__}...")
+        print(f"Casting {getattr(func, '__name__', 'unknown')}...")
         start_time = time.time()
-        result = func(*args, **kwargs)
-        end_time = time.time()
-        print(f"Spell completed in {end_time - start_time:.3f} seconds")
-        return result
+        try:
+            return func(*args, **kwargs)
+        finally:
+            end_time = time.time()
+            print(f"Spell completed in {end_time - start_time:.3f} seconds")
+
     return wrapper
 
 
-def power_validator(min_power: int) -> Callable:
-    def decorator(func: Callable) -> Callable:
+def power_validator(min_power: int) -> Callable[..., Any]:
+    try:
+        safe_min_power = int(min_power)
+    except (ValueError, TypeError):
+        safe_min_power = 0
+
+    def decorator(func: Callable[..., Any]) -> Callable[..., Any]:
         @wraps(func)
         def wrapper(*args: Any, **kwargs: Any) -> Any:
-            power = kwargs.get('power')
+            power: Any = None
 
-            if power is None:
-                if args and isinstance(args[0], int):
-                    power = args[0]
-                elif len(args) >= 3 and isinstance(args[2], int):
-                    power = args[2]
+            if 'power' in kwargs:
+                power = kwargs['power']
+            elif len(args) >= 3:
+                power = args[2]
+            elif len(args) >= 1:
+                power = args[0]
 
-            if power is not None and power >= min_power:
-                return func(*args, **kwargs)
+            try:
+                if power is not None and int(power) >= safe_min_power:
+                    return func(*args, **kwargs)
+            except (ValueError, TypeError):
+                pass
+
             return "Insufficient power for this spell"
+
         return wrapper
+
     return decorator
 
 
-def retry_spell(max_attempts: int) -> Callable:
-    def decorator(func: Callable) -> Callable:
+def retry_spell(max_attempts: int) -> Callable[..., Any]:
+    try:
+        safe_max = int(max_attempts)
+    except (ValueError, TypeError):
+        safe_max = 1
+
+    def decorator(func: Callable[..., Any]) -> Callable[..., Any]:
         @wraps(func)
         def wrapper(*args: Any, **kwargs: Any) -> Any:
-            for attempt in range(1, max_attempts + 1):
+            for attempt in range(1, safe_max + 1):
                 try:
                     return func(*args, **kwargs)
                 except Exception:
-                    if attempt < max_attempts:
+                    if attempt < safe_max:
                         print(
                             f"Spell failed, retrying... "
-                            f"(attempt {attempt}/{max_attempts})"
+                            f"(attempt {attempt}/{safe_max})"
                         )
-            return f"Spell casting failed after {max_attempts} attempts"
+            return f"Spell casting failed after {safe_max} attempts"
+
         return wrapper
+
     return decorator
 
 
 class MageGuild:
     @staticmethod
     def validate_mage_name(name: str) -> bool:
+        if not isinstance(name, str):
+            return False
         if len(name) < 3:
             return False
         return all(char.isalpha() or char.isspace() for char in name)
 
     @power_validator(min_power=10)
-    def cast_spell(self: Any, spell_name: str, power: int) -> str:
+    def cast_spell(self, spell_name: str, power: int) -> str:
         return f"Successfully cast {spell_name} with {power} power"
 
 
 if __name__ == "__main__":
+    print("--- Standard Data Tests ---")
     print("Testing spell timer...")
 
     @spell_timer
@@ -77,7 +101,6 @@ if __name__ == "__main__":
     print(f"Result: {result}")
 
     print("\nTesting retrying spell")
-
     fail_count = 0
 
     @retry_spell(max_attempts=3)
@@ -97,9 +120,19 @@ if __name__ == "__main__":
     print(stable_spell())
 
     print("\nTesting MageGuild...")
-    print(MageGuild.validate_mage_name("Valid Name"))
-    print(MageGuild.validate_mage_name("A1"))
+    print(f"Valid Name: {MageGuild.validate_mage_name('Valid Name')}")
+    print(f"Invalid Name (A1): {MageGuild.validate_mage_name('A1')}")
 
     guild = MageGuild()
     print(guild.cast_spell("Lightning", 15))
     print(guild.cast_spell("Lightning", 5))
+
+    print("\n--- Malicious Peer Tests ---")
+    bad_name: Any = None
+    print(f"Invalid Name (None): {MageGuild.validate_mage_name(bad_name)}")
+
+    bad_int_name: Any = 123
+    print(f"Invalid Name (int): {MageGuild.validate_mage_name(bad_int_name)}")
+
+    bad_power: Any = "not an int"
+    print(f"Corrupt Cast: {guild.cast_spell('Lightning', bad_power)}")
