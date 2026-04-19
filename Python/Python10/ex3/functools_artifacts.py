@@ -5,112 +5,89 @@ from typing import Any
 
 
 def spell_reducer(spells: list[int], operation: str) -> int:
-    try:
-        if not isinstance(spells, list) or not spells:
-            return 0
-        clean_spells = [int(s) for s in spells if isinstance(
-            s, (int, float, str)) and str(s).isdigit()]
-        if not clean_spells:
-            return 0
-
-        ops: dict[str, Callable[[int, int], int]] = {
-            "add": operator.add,
-            "multiply": operator.mul,
-            "max": lambda a, b: max(a, b),
-            "min": lambda a, b: min(a, b)
-        }
-
-        if operation not in ops:
-            return 0
-
-        return functools.reduce(ops[operation], clean_spells)
-    except Exception:
+    if not spells:
         return 0
 
+    ops: dict[str, Callable] = {
+        'add': operator.add,
+        'multiply': operator.mul,
+        'max': max,
+        'min': min,
+    }
 
-def partial_enchanter(base_enchantment: Callable) -> dict[str, Callable]:
-    if not callable(base_enchantment):
-        def failed_enchantment(*args: Any, **kwargs: Any) -> str:
-            return "Enchantment failed: invalid base spell"
-        return {
-            "fire": failed_enchantment,
-            "water": failed_enchantment,
-            "earth": failed_enchantment
-        }
+    if operation not in ops:
+        raise ValueError(f"Unknown operation: '{operation}'")
 
+    if operation in ('max', 'min'):
+        return functools.reduce(ops[operation], spells)
+
+    return functools.reduce(ops[operation], spells)
+
+
+def partial_enchanter(
+    base_enchantment: Callable
+) -> dict[str, Callable]:
     return {
-        "fire": functools.partial(base_enchantment, 50, "fire"),
-        "water": functools.partial(base_enchantment, 50, "water"),
-        "earth": functools.partial(base_enchantment, 50, "earth")
+        'fire': functools.partial(base_enchantment, 50, 'fire'),
+        'ice': functools.partial(base_enchantment, 50, 'ice'),
+        'lightning': functools.partial(base_enchantment, 50, 'lightning'),
     }
 
 
 @functools.lru_cache(maxsize=None)
 def memoized_fibonacci(n: int) -> int:
-    try:
-        safe_n = int(n)
-        if safe_n <= 0:
-            return 0
-        if safe_n == 1:
-            return 1
-        return memoized_fibonacci(safe_n - 1) + memoized_fibonacci(safe_n - 2)
-    except (ValueError, TypeError):
+    if n <= 0:
         return 0
+    if n == 1:
+        return 1
+    return memoized_fibonacci(n - 1) + memoized_fibonacci(n - 2)
 
 
 def spell_dispatcher() -> Callable[[Any], str]:
     @functools.singledispatch
-    def cast_spell(arg: Any) -> str:
+    def dispatch(spell: Any) -> str:
         return "Unknown spell type"
 
-    @cast_spell.register(int)
-    def _(arg: int) -> str:
-        return f"Damage spell: {arg} damage"
+    @dispatch.register(int)
+    def _(spell: int) -> str:
+        return f"Damage spell: {spell} damage"
 
-    @cast_spell.register(str)
-    def _(arg: str) -> str:
-        return f"Enchantment: {arg}"
+    @dispatch.register(str)
+    def _(spell: str) -> str:
+        return f"Enchantment: {spell}"
 
-    @cast_spell.register(list)
-    def _(arg: list) -> str:
-        return f"Multi-cast: {len(arg)} spells"
+    @dispatch.register(list)
+    def _(spell: list) -> str:
+        return f"Multi-cast: {len(spell)} spells"
 
-    return cast_spell
+    return dispatch
 
 
 if __name__ == "__main__":
-    print("--- Standard Data Tests ---")
+    print("Testing spell reducer...")
     spells = [10, 20, 30, 40]
     print(f"Sum: {spell_reducer(spells, 'add')}")
     print(f"Product: {spell_reducer(spells, 'multiply')}")
     print(f"Max: {spell_reducer(spells, 'max')}")
 
+    print("\nTesting partial enchanter...")
+
     def base_enchant(power: int, element: str, target: str) -> str:
-        return f"Enchanted {target} with {power} {element} power!"
+        return f"{element} enchantment on {target} with power {power}"
 
-    enchanters = partial_enchanter(base_enchant)
-    print(enchanters["fire"]("Sword"))
-    print(enchanters["water"]("Shield"))
+    enchants = partial_enchanter(base_enchant)
+    print(enchants['fire']('Sword'))
+    print(enchants['ice']('Shield'))
+    print(enchants['lightning']('Staff'))
 
-    print(f"Fib(0): {memoized_fibonacci(0)}")
-    print(f"Fib(10): {memoized_fibonacci(10)}")
+    print("\nTesting memoized fibonacci...")
+    for n in [0, 1, 10, 15]:
+        print(f"Fib({n}): {memoized_fibonacci(n)}")
+    print(f"Cache info: {memoized_fibonacci.cache_info()}")
 
+    print("\nTesting spell dispatcher...")
     dispatch = spell_dispatcher()
     print(dispatch(42))
-    print(dispatch(["fireball", "heal", "shield"]))
-
-    print("\n--- Malicious Peer Tests ---")
-    print(f"Reducer (Unknown Op): {spell_reducer([10, 20], 'divide')}")
-
-    bad_spells: Any = ['a', 'b']
-    print(f"Reducer (String List): {spell_reducer(bad_spells, 'add')}")
-
-    bad_base_enchant: Any = "not a function"
-    bad_enchanters = partial_enchanter(bad_base_enchant)
-    print(f"Partial (Bad Base): {bad_enchanters['fire']('Sword')}")
-
-    bad_fib_str: Any = '10'
-    print(f"Fibonacci (String): {memoized_fibonacci(bad_fib_str)}")
-    
-    bad_fib_none: Any = None
-    print(f"Fibonacci (None): {memoized_fibonacci(bad_fib_none)}")
+    print(dispatch("fireball"))
+    print(dispatch(["fire", "ice", "lightning"]))
+    print(dispatch(3.14))

@@ -1,96 +1,58 @@
-from typing import Any
+from collections.abc import Callable  # noqa: F401
 
 
 def artifact_sorter(artifacts: list[dict]) -> list[dict]:
-    try:
-        return sorted(
-            artifacts,
-            key=lambda artifact: artifact.get(
-                'power', 0) if isinstance(artifact, dict) else 0,
-            reverse=True
-        )
-    except TypeError:
-        return []
+    return sorted(artifacts, key=lambda a: a['power'], reverse=True)
 
 
 def power_filter(mages: list[dict], min_power: int) -> list[dict]:
-    try:
-        return list(
-            filter(
-                lambda mage: isinstance(mage, dict) and mage.get(
-                    'power', 0) >= min_power,
-                mages
-            )
-        )
-    except TypeError:
-        return []
+    return list(filter(lambda m: m['power'] >= min_power, mages))
 
 
 def spell_transformer(spells: list[str]) -> list[str]:
-    try:
-        return list(map(lambda spell: f"* {spell} *", spells))
-    except TypeError:
-        return []
+    return list(map(lambda s: f"* {s} *", spells))
 
 
 def mage_stats(mages: list[dict]) -> dict:
-    default_stats = {'max_power': 0, 'min_power': 0, 'avg_power': 0.0}
-    try:
-        if not mages:
-            return default_stats
-
-        valid_mages = list(
-            filter(lambda m: isinstance(m, dict) and 'power' in m, mages))
-
-        if not valid_mages:
-            return default_stats
-
-        max_power = max(valid_mages, key=lambda mage: mage['power'])['power']
-        min_power = min(valid_mages, key=lambda mage: mage['power'])['power']
-        avg_power = round(
-            sum(map(lambda mage: mage['power'],
-                    valid_mages)) / len(valid_mages), 2
-        )
-
-        return {
-            'max_power': max_power,
-            'min_power': min_power,
-            'avg_power': avg_power
-        }
-    except (TypeError, ValueError, ZeroDivisionError):
-        return default_stats
+    return {
+        'max_power': max(mages, key=lambda m: m['power'])['power'],
+        'min_power': min(mages, key=lambda m: m['power'])['power'],
+        'avg_power': round(
+            sum(map(lambda m: m['power'], mages)) / len(mages), 2
+        ),
+    }
 
 
 if __name__ == "__main__":
-    sample_artifacts = [{'name': 'Crystal Orb', 'power': 85}, {
-        'name': 'Fire Staff', 'power': 92}]
-    sample_mages = [{'name': 'Alex', 'power': 120},
-                    {'name': 'Jordan', 'power': 90}]
-    sample_spells = ['fireball', 'heal shield']
+    artifacts = [
+        {'name': 'Crystal Orb', 'power': 85, 'type': 'orb'},
+        {'name': 'Fire Staff', 'power': 92, 'type': 'staff'},
+        {'name': 'Shadow Dagger', 'power': 70, 'type': 'blade'},
+    ]
 
-    print("--- Standard Data Tests ---")
-    sorted_arts = artifact_sorter(sample_artifacts)
-    print(f"{sorted_arts[0]['name']} ({sorted_arts[0]['power']} power) comes "
-          f"before {sorted_arts[1]['name']} ({sorted_arts[1]['power']} power)")
-
-    for spell in spell_transformer(sample_spells):
-        print(spell)
-
-    print(mage_stats(sample_mages))
-
-    print("\n--- Corrupted Data Tests ---")
-
-    bad_artifacts: Any = None
-    print(f"Artifact Sorter (None): {artifact_sorter(bad_artifacts)}")
-
+    print("Testing artifact sorter...")
+    sorted_artifacts = artifact_sorter(artifacts)
+    first, second = sorted_artifacts[0], sorted_artifacts[1]
     print(
-        f"Power Filter (Malformed dicts): "
-        f"{power_filter([{'name': 'Novice'}], 50)}")
-    
-    bad_spells: Any = [1, 2, 3]
-    print(f"Spell Transformer (Int list): {spell_transformer(bad_spells)}")
-    
-    bad_mages: Any = [{'power': 100}, 'not a mage', {'name': 'Bob'}]
-    print(
-        f"Mage Stats (Mixed garbage): "
-        f"{mage_stats(bad_mages)}")
+        f"{first['name']} ({first['power']} power) "
+        f"comes before {second['name']} ({second['power']} power)"
+    )
+
+    mages = [
+        {'name': 'Alex', 'power': 80, 'element': 'fire'},
+        {'name': 'Jordan', 'power': 45, 'element': 'water'},
+        {'name': 'Riley', 'power': 95, 'element': 'earth'},
+    ]
+
+    print("\nTesting power filter...")
+    powerful = power_filter(mages, 60)
+    print(f"Mages with power >= 60: {[m['name'] for m in powerful]}")
+
+    spells = ['fireball', 'heal', 'shield']
+    print("\nTesting spell transformer...")
+    print(*spell_transformer(spells))
+
+    print("\nTesting mage stats...")
+    stats = mage_stats(mages)
+    print(f"Max: {stats['max_power']}, Min: {stats['min_power']}, "
+          f"Avg: {stats['avg_power']}")
